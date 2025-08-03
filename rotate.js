@@ -1,4 +1,4 @@
-const frameCount = 36; // number of images
+const frameCount = 8; // number of images
 const imgElement = document.getElementById('rotatingImage');
 let currentFrame = 1;
 let isDragging = false;
