@@ -34,7 +34,7 @@ function onDragMove(e) {
   currentFrame -= deltaX * 0.2; // adjust sensitivity
   updateImage(currentFrame);
 
-  velocity = -deltaX * 0.3; // inertia strength
+  velocity = -deltaX * 0.65; // inertia strength
 }
 
 function onDragEnd() {
@@ -60,3 +60,4 @@ viewer.addEventListener('mouseleave', onDragEnd);
 viewer.addEventListener('touchstart', onDragStart);
 viewer.addEventListener('touchmove', onDragMove);
 viewer.addEventListener('touchend', onDragEnd);
+
