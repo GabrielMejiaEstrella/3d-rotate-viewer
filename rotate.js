@@ -46,7 +46,7 @@ function applyInertia() {
   if (Math.abs(velocity) > 0.05) {
     currentFrame += velocity * 0.1; // scale velocity down for smoothness
     updateImage(currentFrame);
-    velocity *= 0.25; // your low-friction value is fine here, because wrapFrame prevents errors
+    velocity *= 0.65; // your low-friction value is fine here, because wrapFrame prevents errors
     animationId = requestAnimationFrame(applyInertia);
   }
 }
@@ -60,4 +60,5 @@ viewer.addEventListener('mouseleave', onDragEnd);
 viewer.addEventListener('touchstart', onDragStart);
 viewer.addEventListener('touchmove', onDragMove);
 viewer.addEventListener('touchend', onDragEnd);
+
 
