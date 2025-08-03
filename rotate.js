@@ -1,41 +1,39 @@
-const frameCount = 8; // number of images
+const frameCount = 36;
 const imgElement = document.getElementById('rotatingImage');
 let currentFrame = 1;
 let isDragging = false;
-let startX = 0;
+let lastX = 0;
 let velocity = 0;
 let animationId = null;
 
 function updateImage(frame) {
-  imgElement.src = `images/frame${frame}.jpg`;
+  // wrap frame number
+  if (frame < 1) frame = frameCount;
+  if (frame > frameCount) frame = 1;
+  currentFrame = frame;
+  imgElement.src = `images/frame${Math.round(currentFrame)}.jpg`;
 }
 
 function onDragStart(e) {
   isDragging = true;
-  startX = e.pageX || e.touches[0].pageX;
-  velocity = 0; // reset velocity
-  cancelAnimationFrame(animationId); // stop any ongoing inertia
-  e.preventDefault();
+  lastX = e.pageX || e.touches[0].pageX;
+  velocity = 0;
+  cancelAnimationFrame(animationId); // stop inertia if user grabs again
 }
 
 function onDragMove(e) {
   if (!isDragging) return;
+
   const x = e.pageX || e.touches[0].pageX;
-  const deltaX = x - startX;
-  startX = x;
+  const deltaX = x - lastX;
+  lastX = x;
 
-  // The frame change per move
-  const frameChange = deltaX > 0 ? -1 : 1;
-  currentFrame += frameChange;
-
-  // Keep frame in range
-  if (currentFrame < 1) currentFrame = frameCount;
-  if (currentFrame > frameCount) currentFrame = 1;
-
+  // Convert drag distance to frame movement
+  currentFrame -= deltaX * 0.2; // 0.2 = sensitivity factor
   updateImage(currentFrame);
 
-  // Store velocity based on deltaX (for inertia)
-  velocity = frameChange * 2; // tweak multiplier for faster/slower spin
+  // Store velocity based on last movement
+  velocity = -deltaX * 0.3; // tweak multiplier for inertia strength
 }
 
 function onDragEnd() {
@@ -43,20 +41,17 @@ function onDragEnd() {
   applyInertia();
 }
 
-// Inertia animation
 function applyInertia() {
-  if (Math.abs(velocity) < 0.05) return; // stop if speed is almost 0
+  // keep spinning while velocity is significant
+  if (Math.abs(velocity) > 0.05) {
+    currentFrame += velocity * 0.1; // convert velocity to frame speed
+    updateImage(currentFrame);
 
-  // Update frame based on velocity
-  currentFrame += velocity;
-  if (currentFrame < 1) currentFrame = frameCount;
-  if (currentFrame > frameCount) currentFrame = 1;
-  updateImage(Math.round(currentFrame));
+    // apply friction to slow down over time
+    velocity *= 0.95;
 
-  // Apply friction (slows down over time)
-  velocity *= 0.95; // adjust 0.95 → 0.90 for faster slow-down
-
-  animationId = requestAnimationFrame(applyInertia);
+    animationId = requestAnimationFrame(applyInertia);
+  }
 }
 
 const viewer = document.getElementById('viewer');
