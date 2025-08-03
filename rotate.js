@@ -48,7 +48,7 @@ function applyInertia() {
     updateImage(currentFrame);
 
     // apply friction to slow down over time
-    velocity *= 0.95;
+    velocity *= 0.2;
 
     animationId = requestAnimationFrame(applyInertia);
   }
@@ -63,3 +63,4 @@ viewer.addEventListener('mouseleave', onDragEnd);
 viewer.addEventListener('touchstart', onDragStart);
 viewer.addEventListener('touchmove', onDragMove);
 viewer.addEventListener('touchend', onDragEnd);
+
